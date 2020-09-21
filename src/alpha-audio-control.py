@@ -33,21 +33,27 @@ note_freq = {
 server = pyo.Server().boot()
 
 sine = pyo.Sine(mul=0.1)
+output = pyo.FM()
 
 def handle_keypress(keyboard_event):
   name = keyboard_event.name
   
   if name in note_freq:
-    sine.freq = note_freq[name]
-    sine.out()
+    output.carrier = note_freq[name]
+    output.out()
   else:
-    sine.stop()
+    output.stop()
 
   print(name)
   if name == 'esc':
     keyboard.unhook_all()
 
+
 server.start()
 keyboard.on_press(handle_keypress)
+
+output.ctrl(title="Frequency modulation controls")
+server.gui(locals())
+
 keyboard.wait('esc')
 server.stop()
